@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 import "./assets/styles/index.scss";
@@ -15,70 +15,71 @@ const Rating = ({ isFilled }) => (isFilled ? "★" : "☆");
 
 const ProductCardWithLogger = logRender(ProductCard, "ProductCard");
 
-class App extends Component {
-  state = {
+const App = () => {
+  const [currentRange, setCurrentRange] = useState({
     from: 0,
-    to: 0,
-    min: 0,
-    max: 0,
-    products: []
-  };
+    to: 0
+  });
 
-  async componentDidMount() {
+  const [range, setRange] = useState({
+    min: 0,
+    max: 0
+  });
+
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
     try {
       const data = await import("./products.json");
       const products = data.default;
       const { min, max } = getMaxMinPrice(products);
 
-      this.setState({
-        products,
-        min,
-        max,
-        from: min,
-        to: max
-      });
+      setProducts(products);
+      setRange({ min, max });
+      setCurrentRange({ from: min, to: max });
     } catch (err) {
       console.log(err);
     }
-  }
-
-  onSubmit = ({ from, to }) => {
-    if (from === this.state.from && to === this.state.to) return;
-    this.setState({ from, to });
   };
 
-  render() {
-    const { products, from, to, min, max } = this.state;
-    const filteredProducts = products.filter(
-      ({ price }) => price >= from && price <= to
-    );
+  const onSubmit = ({ from, to }) => {
+    if (from === currentRange.from && to === currentRange.to) return;
+    setCurrentRange({ from, to });
+  };
 
-    const formattedProducts = filteredProducts.map(({ price, ...rest }) => ({
-      price: formatPrice(price),
-      ...rest
-    }));
+  const { from, to } = currentRange;
 
-    return (
-      <div className="app">
-        <div className={styled.products}>
-          <Heading className={styled.products__title}>Список товаров</Heading>
-          <PriceFilter
-            onSubmit={this.onSubmit}
-            defaultFrom={min}
-            defaultTo={max}
-          />
-          <Grid
-            columnsCount={3}
-            items={formattedProducts}
-            render={props => (
-              <ProductCardWithLogger ratingComponent={Rating} {...props} />
-            )}
-          />
-        </div>
+  const { min, max } = range;
+
+  const filteredProducts = products.filter(
+    ({ price }) => price >= from && price <= to
+  );
+
+  const formattedProducts = filteredProducts.map(({ price, ...rest }) => ({
+    price: formatPrice(price),
+    ...rest
+  }));
+
+  return (
+    <div className="app">
+      <div className={styled.products}>
+        <Heading className={styled.products__title}>Список товаров</Heading>
+        <PriceFilter onSubmit={onSubmit} defaultFrom={min} defaultTo={max} />
+        <Grid
+          columnsCount={3}
+          items={formattedProducts}
+          render={props => (
+            <ProductCardWithLogger ratingComponent={Rating} {...props} />
+          )}
+        />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 const rootElement = document.getElementById("root");
 
