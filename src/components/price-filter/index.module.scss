@@ -5,7 +5,13 @@
   align-items: start;
   grid-auto-rows: min-content;
 
-  &__submit {
+  &__title {
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  &__title,
+  &__discount {
     grid-column: span 2;
   }
 }

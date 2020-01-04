@@ -21,6 +21,7 @@ class App extends Component {
     to: 0,
     min: 0,
     max: 0,
+    sale: 0,
     products: []
   };
 
@@ -42,13 +43,14 @@ class App extends Component {
     }
   }
 
-  onSubmit = ({ from, to }) => {
-    if (from === this.state.from && to === this.state.to) return;
-    this.setState({ from, to });
+  onFilterChange = ({ target: { name, value } }) => {
+    this.setState({
+      [name]: Number(value)
+    });
   };
 
   render() {
-    const { products, from, to, min, max } = this.state;
+    const { products, from, to, min, max, sale } = this.state;
     const filteredProducts = products.filter(
       ({ price }) => price >= from && price <= to
     );
@@ -63,9 +65,12 @@ class App extends Component {
         <div className={styled.products}>
           <Heading className={styled.products__title}>Список товаров</Heading>
           <PriceFilter
-            onSubmit={this.onSubmit}
-            defaultFrom={min}
-            defaultTo={max}
+            onChange={this.onFilterChange}
+            min={min}
+            max={max}
+            from={from}
+            to={to}
+            sale={sale}
           />
           <Grid
             columnsCount={3}
