@@ -9,11 +9,11 @@ import { PriceFilter } from "components/price-filter";
 import ProductCard from "csssr-school-product-card";
 import styled from "./index.module.scss";
 import { formatPrice, getMaxMinPrice } from "helpers";
-import { logRender } from "hoc";
+import { withLogger } from "hoc";
 
 const Rating = ({ isFilled }) => (isFilled ? "★" : "☆");
 
-const ProductCardWithLogger = logRender(ProductCard, "ProductCard");
+const ProductCardWithLogger = withLogger(ProductCard, "ProductCard");
 
 class App extends Component {
   state = {

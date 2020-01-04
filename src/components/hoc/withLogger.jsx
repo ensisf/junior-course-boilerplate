@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { logger } from "csssr-school-utils";
 
-const logRender = (WrappedComponent, name) =>
+const withLogger = (WrappedComponent, name) =>
   class extends Component {
     shouldComponentUpdate(nextProps, nextState) {
       logger.call(WrappedComponent, name, nextProps, nextState);
@@ -13,4 +13,4 @@ const logRender = (WrappedComponent, name) =>
     }
   };
 
-export { logRender };
+export { withLogger };

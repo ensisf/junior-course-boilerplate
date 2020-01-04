@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "./index.module.scss";
 import cn from "classnames/bind";
-import { logRender } from "hoc";
+import { withLogger } from "hoc";
 
 const stylesCx = cn.bind(styled);
 
@@ -39,6 +39,6 @@ BaseFormControl.propTypes = {
   isHorizontal: PropTypes.bool
 };
 
-const FormControl = logRender(BaseFormControl, "FormControl");
+const FormControl = withLogger(BaseFormControl, "FormControl");
 
 export { FormControl };

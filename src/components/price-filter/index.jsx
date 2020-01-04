@@ -4,7 +4,7 @@ import { FormField } from "components/shared/form/form-field";
 import { Button } from "components/shared/button";
 import PropTypes from "prop-types";
 import styled from "./index.module.scss";
-import { logRender } from "hoc";
+import { withLogger } from "hoc";
 
 class BaseFilter extends Component {
   state = { from: 0, to: 0 };
@@ -86,6 +86,6 @@ BaseFilter.propTypes = {
   defaultTo: PropTypes.number.isRequired
 };
 
-const PriceFilter = logRender(BaseFilter, "PriceFilter");
+const PriceFilter = withLogger(BaseFilter, "PriceFilter");
 
 export { PriceFilter };

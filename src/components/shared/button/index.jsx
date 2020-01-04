@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "./index.module.scss";
 import cn from "classnames/bind";
 import { Spinner } from "components/shared/spinner";
-import { logRender } from "hoc";
+import { withLogger } from "hoc";
 import { BUTTON_SIZES, BUTTON_TYPES } from "constants";
 
 const stylesCx = cn.bind(styled);
@@ -46,6 +46,6 @@ BaseButton.propTypes = {
   size: PropTypes.oneOf(Object.values(BUTTON_SIZES))
 };
 
-const Button = logRender(BaseButton, "Button");
+const Button = withLogger(BaseButton, "Button");
 
 export { Button };

@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import { logRender } from "hoc";
+import { withLogger } from "hoc";
 
 const BaseSpinner = ({ size = "1em", className = "", ...attrs }) => {
   return (
@@ -37,6 +37,6 @@ const BaseSpinner = ({ size = "1em", className = "", ...attrs }) => {
   );
 };
 
-const Spinner = logRender(BaseSpinner, "Spinner");
+const Spinner = withLogger(BaseSpinner, "Spinner");
 
 export { Spinner };

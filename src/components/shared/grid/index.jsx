@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "./index.module.scss";
 import PropTypes from "prop-types";
-import { logRender } from "hoc";
+import { withLogger } from "hoc";
 
 const BaseGrid = ({
   children,
@@ -34,5 +34,5 @@ BaseGrid.propTypes = {
   render: PropTypes.func.isRequired,
   columnsCount: PropTypes.number
 };
-const Grid = logRender(BaseGrid, "Grid");
+const Grid = withLogger(BaseGrid, "Grid");
 export { Grid };

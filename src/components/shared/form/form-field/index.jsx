@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "./index.module.scss";
 import cn from "classnames/bind";
-import { logRender } from "hoc";
+import { withLogger } from "hoc";
 import { FIELD_TYPES, INPUT_TYPES } from "constants";
 
 const stylesCx = cn.bind(styled);
@@ -41,6 +41,6 @@ BaseFormField.propTypes = {
   hasError: PropTypes.bool
 };
 
-const FormField = logRender(BaseFormField, "FormField");
+const FormField = withLogger(BaseFormField, "FormField");
 
 export { FormField };
