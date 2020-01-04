@@ -1,11 +1,14 @@
 import React from "react";
 import { withLogger } from "hoc";
 import { FormControl } from "components/shared/form/form-control";
-import { FormField } from "components/shared/form/form-field";
+import { FormNumberField } from "components/shared/form/form-number-field";
 import Discount from "csssr-school-input-discount";
 import PropTypes from "prop-types";
 import styled from "./index.module.scss";
 import { Heading } from "components/shared/heading";
+import { withNumber } from "hoc";
+
+const DiscountWithNumber = withNumber(Discount);
 
 const BaseFilter = ({
   from = 0,
@@ -28,29 +31,34 @@ const BaseFilter = ({
         Список товаров
       </Heading>
       <FormControl isHorizontal label="От">
-        <FormField
+        <FormNumberField
           type="number"
-          onChange={onChange}
           step="1000"
+          onChange={onChange}
+          name="from"
           min={min}
           max={max}
-          name="from"
           value={from}
         />
       </FormControl>
       <FormControl isHorizontal label="До">
-        <FormField
+        <FormNumberField
           type="number"
+          step="1000"
           onChange={onChange}
           name="to"
           min={min}
           max={max}
-          step="1000"
           value={to}
         />
       </FormControl>
       <div className={styled.priceFilter__discount}>
-        <Discount onChange={onChange} title="Скидка" name="sale" value={sale} />
+        <DiscountWithNumber
+          onChange={onChange}
+          title="Скидка"
+          name="sale"
+          value={sale}
+        />
       </div>
     </form>
   );

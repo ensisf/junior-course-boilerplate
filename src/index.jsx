@@ -43,7 +43,7 @@ class App extends Component {
     }
   }
 
-  onFilterChange = ({ target: { name, value } }) => {
+  onFilterChange = ({ name, value }) => {
     this.setState({
       [name]: Number(value)
     });
@@ -52,7 +52,8 @@ class App extends Component {
   render() {
     const { products, from, to, min, max, sale } = this.state;
     const filteredProducts = products.filter(
-      ({ price }) => price >= from && price <= to
+      ({ price, discount }) =>
+        price >= from && price <= to && discount >= sale / 100
     );
 
     const formattedProducts = filteredProducts.map(({ price, ...rest }) => ({
@@ -75,6 +76,7 @@ class App extends Component {
           <Grid
             columnsCount={3}
             items={formattedProducts}
+            emptyListPlaceholder="По заданным параметрам ничего не найдено."
             render={props => (
               <ProductCardWithLogger ratingComponent={Rating} {...props} />
             )}

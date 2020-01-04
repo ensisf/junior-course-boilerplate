@@ -10,6 +10,7 @@ const BaseGrid = ({
   items,
   render,
   columnsCount = 1,
+  emptyListPlaceholder = "",
   ...attrs
 }) => {
   const style = {
@@ -22,7 +23,11 @@ const BaseGrid = ({
 
   return (
     <ul className={`${styled.grid} ${className}`} style={style} {...attrs}>
-      {columns}
+      {columns.length ? (
+        columns
+      ) : (
+        <li className={styled.grid__placeholder}>{emptyListPlaceholder}</li>
+      )}
     </ul>
   );
 };
