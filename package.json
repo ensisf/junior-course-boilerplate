@@ -16,6 +16,7 @@
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "classnames": "^2.2.6",
     "css-loader": "3.2.0",
+    "csssr-school-input-discount": "git+https://github.com/CSSSR-School/junior-course-input-discount.git",
     "csssr-school-product-card": "git+https://github.com/actimeller/junior-course-product-card.git",
     "csssr-school-utils": "git+https://github.com/CSSSR-School/junior-course-utils.git",
     "dotenv": "8.2.0",
@@ -68,7 +69,14 @@
     "build": "node scripts/build.js"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    }
   },
   "browserslist": [
     ">0.2%",
