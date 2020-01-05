@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import ReactDOM from "react-dom";
 
 import "./assets/styles/index.scss";
@@ -8,14 +8,14 @@ import { Grid } from "components/shared/grid";
 import { PriceFilter } from "components/price-filter";
 import ProductCard from "csssr-school-product-card";
 import styled from "./index.module.scss";
-import { formatPrice, getMaxMinPrice } from "helpers";
+import { formatPrice, getMaxMinPrice, memoizeByProps } from "helpers";
 import { withLogger } from "hoc";
 
 const Rating = ({ isFilled }) => (isFilled ? "★" : "☆");
 
 const ProductCardWithLogger = withLogger(ProductCard, "ProductCard");
 
-class App extends Component {
+class App extends PureComponent {
   state = {
     from: 0,
     to: 0,
@@ -49,8 +49,7 @@ class App extends Component {
     });
   };
 
-  render() {
-    const { products, from, to, min, max, sale } = this.state;
+  getProducts = memoizeByProps((products, from, to, sale) => {
     const filteredProducts = products.filter(
       ({ price, discount }) =>
         price >= from && price <= to && discount >= sale / 100
@@ -60,6 +59,14 @@ class App extends Component {
       price: formatPrice(price),
       ...rest
     }));
+
+    return formattedProducts;
+  });
+
+  render() {
+    const { products, from, to, min, max, sale } = this.state;
+
+    const items = this.getProducts(products, from, to, sale);
 
     return (
       <div className="app">
@@ -75,7 +82,7 @@ class App extends Component {
           />
           <Grid
             columnsCount={3}
-            items={formattedProducts}
+            items={items}
             emptyListPlaceholder="По заданным параметрам ничего не найдено."
             render={props => (
               <ProductCardWithLogger ratingComponent={Rating} {...props} />

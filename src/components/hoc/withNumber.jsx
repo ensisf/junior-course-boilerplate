@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
 const ONLY_NUMBERS_REGEXP = /[^0-9]+/g;
 
 const withNumber = WrappedComponent =>
-  class extends Component {
+  class extends PureComponent {
     onInputChange = e => {
       const {
         target: { name, value }

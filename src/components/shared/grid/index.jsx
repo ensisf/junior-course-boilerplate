@@ -23,7 +23,7 @@ const BaseGrid = ({
 
   return (
     <ul className={`${styled.grid} ${className}`} style={style} {...attrs}>
-      {columns.length ? (
+      {Array.isArray(columns) && columns.length ? (
         columns
       ) : (
         <li className={styled.grid__placeholder}>{emptyListPlaceholder}</li>
