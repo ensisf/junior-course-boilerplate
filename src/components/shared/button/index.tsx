@@ -1,16 +1,24 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { FC, ButtonHTMLAttributes } from "react";
 import styled from "./index.module.scss";
 import cn from "classnames/bind";
 import { Spinner } from "components/shared/spinner";
 import { withLogger } from "hoc";
-import { BUTTON_SIZES, BUTTON_TYPES } from "constants";
 
 const stylesCx = cn.bind(styled);
 
-const BaseButton = ({
+type Props = {
+  onClick: () => void;
+  type: ButtonType;
+  size?: ButtonSize;
+  disabled?: boolean;
+  isFull?: boolean;
+  isSpinnerShown?: boolean;
+  className?: string;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+const BaseButton: FC<Props> = ({
   onClick,
-  type = BUTTON_TYPES.button,
+  type = "button",
   size,
   disabled,
   isFull,
@@ -21,7 +29,7 @@ const BaseButton = ({
 }) => {
   const classNames = stylesCx({
     btn: true,
-    "btn--lg": size === BUTTON_SIZES.lg,
+    "btn--lg": size === "lg",
     "btn--full": isFull
   });
 
@@ -39,13 +47,6 @@ const BaseButton = ({
   );
 };
 
-BaseButton.propTypes = {
-  type: PropTypes.oneOf(Object.values(BUTTON_TYPES)),
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool,
-  size: PropTypes.oneOf(Object.values(BUTTON_SIZES))
-};
-
-const Button = withLogger(BaseButton, "Button");
+const Button = withLogger<Props>(BaseButton, "Button");
 
 export { Button };

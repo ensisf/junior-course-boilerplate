@@ -43,7 +43,7 @@ class App extends PureComponent {
     }
   }
 
-  onFilterChange = ({ name, value }) => {
+  onFilterChange = ({ name, value }: { name: string; value: number }): void => {
     this.setState({
       [name]: Number(value)
     });

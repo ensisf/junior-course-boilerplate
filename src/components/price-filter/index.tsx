@@ -1,24 +1,42 @@
-import React from "react";
+import React, { FC, SyntheticEvent, FormHTMLAttributes } from "react";
 import { withLogger } from "hoc";
 import { FormControl } from "components/shared/form/form-control";
 import { FormNumberField } from "components/shared/form/form-number-field";
 import Discount from "csssr-school-input-discount";
-import PropTypes from "prop-types";
 import styled from "./index.module.scss";
 import { Heading } from "components/shared/heading";
 import { withNumber } from "hoc";
 
-const DiscountWithNumber = withNumber(Discount);
+type DiscountProps = {
+  onChange: (payload: { name: string; value: number }) => void;
+  name: string;
+  title: string;
+  value: number;
+};
 
-const BaseFilter = ({
+const DiscountWithNumber = withNumber<DiscountProps>(Discount);
+
+type Props = {
+  from: number;
+  to: number;
+  min: number;
+  max: number;
+  sale: number;
+  onChange: OnFilterChange;
+  onSubmit?: () => void;
+  className?: string;
+} & FormHTMLAttributes<HTMLFormElement>;
+
+const BaseFilter: FC<Props> = ({
   from = 0,
   to = 0,
   min = 0,
   max = 0,
   sale = 0,
   onChange,
-  onSubmit = e => e.preventDefault(),
+  onSubmit = (e: SyntheticEvent) => e.preventDefault(),
   className = "",
+  children,
   ...attrs
 }) => {
   return (
@@ -27,7 +45,7 @@ const BaseFilter = ({
       className={`${styled.priceFilter} ${className}`}
       {...attrs}
     >
-      <Heading level={3} className={styled.priceFilter__title}>
+      <Heading level={5} className={styled.priceFilter__title}>
         Список товаров
       </Heading>
       <FormControl isHorizontal label="От">
@@ -64,16 +82,6 @@ const BaseFilter = ({
   );
 };
 
-BaseFilter.propTypes = {
-  from: PropTypes.number.isRequired,
-  to: PropTypes.number.isRequired,
-  min: PropTypes.number.isRequired,
-  max: PropTypes.number.isRequired,
-  sale: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
-  className: PropTypes.string
-};
-
-const PriceFilter = withLogger(BaseFilter, "PriceFilter");
+const PriceFilter = withLogger<Props>(BaseFilter, "PriceFilter");
 
 export { PriceFilter };

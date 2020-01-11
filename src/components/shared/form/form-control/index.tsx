@@ -1,12 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { FC, HTMLAttributes } from "react";
 import styled from "./index.module.scss";
 import cn from "classnames/bind";
 import { withLogger } from "hoc";
 
 const stylesCx = cn.bind(styled);
 
-const BaseFormControl = ({
+type Props = {
+  className?: string;
+  label?: string;
+  hint?: string;
+  isHorizontal?: boolean;
+} & HTMLAttributes<HTMLDivElement>;
+
+const BaseFormControl: FC<Props> = ({
   className = "",
   label,
   hint,
@@ -32,13 +38,6 @@ const BaseFormControl = ({
   );
 };
 
-BaseFormControl.propTypes = {
-  className: PropTypes.string,
-  label: PropTypes.string,
-  hint: PropTypes.string,
-  isHorizontal: PropTypes.bool
-};
-
-const FormControl = withLogger(BaseFormControl, "FormControl");
+const FormControl = withLogger<Props>(BaseFormControl, "FormControl");
 
 export { FormControl };

@@ -1,8 +1,18 @@
-import React from "react";
+import React, { FC, SVGAttributes } from "react";
 import styles from "./styles.module.scss";
 import { withLogger } from "hoc";
 
-const BaseSpinner = ({ size = "1em", className = "", ...attrs }) => {
+type Props = {
+  size?: string;
+  className?: string;
+} & SVGAttributes<SVGElement>;
+
+const BaseSpinner: FC<Props> = ({
+  size = "1em",
+  className = "",
+  children,
+  ...attrs
+}) => {
   return (
     <svg
       width={size}
@@ -37,6 +47,6 @@ const BaseSpinner = ({ size = "1em", className = "", ...attrs }) => {
   );
 };
 
-const Spinner = withLogger(BaseSpinner, "Spinner");
+const Spinner = withLogger<Props>(BaseSpinner, "Spinner");
 
 export { Spinner };

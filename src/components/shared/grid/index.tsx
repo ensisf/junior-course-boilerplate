@@ -1,9 +1,17 @@
-import React from "react";
+import React, { FC, HTMLAttributes, ReactNode } from "react";
 import styled from "./index.module.scss";
-import PropTypes from "prop-types";
 import { withLogger } from "hoc";
 
-const BaseGrid = ({
+type Props<T = any> = {
+  className?: string;
+  keyValue?: string;
+  items: T[];
+  render: (item: T) => ReactNode;
+  columnsCount?: number;
+  emptyListPlaceholder?: string;
+} & HTMLAttributes<HTMLUListElement>;
+
+const BaseGrid: FC<Props> = ({
   children,
   className = "",
   keyValue = "id",
@@ -32,12 +40,6 @@ const BaseGrid = ({
   );
 };
 
-BaseGrid.propTypes = {
-  keyValue: PropTypes.string,
-  className: PropTypes.string,
-  items: PropTypes.array.isRequired,
-  render: PropTypes.func.isRequired,
-  columnsCount: PropTypes.number
-};
-const Grid = withLogger(BaseGrid, "Grid");
+const Grid = withLogger<Props>(BaseGrid, "Grid");
+
 export { Grid };
