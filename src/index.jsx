@@ -12,7 +12,7 @@ import { formatPrice, getMaxMinPrice, memoizeByProps } from "helpers";
 import { withLogger } from "hoc";
 import { clone } from "ramda";
 import { FilterContext } from "context";
-import queryString from "query-string";
+import { getFromHistory, setToHistory } from "helpers";
 
 const Rating = ({ isFilled }) => (isFilled ? "★" : "☆");
 
@@ -38,24 +38,37 @@ class App extends PureComponent {
 
   async componentDidMount() {
     try {
-      this.getFromHistory();
+      window.addEventListener("popstate", this.setStateFromURL);
+
       const data = await import("./products.json");
       const products = data.default;
       const { min, max } = getMaxMinPrice(products);
 
+      const {
+        from = min,
+        to = max,
+        sale = 0,
+        ...rest
+      } = this.getStateFromUrl();
       this.setState({
         products,
         min,
         max,
-        from: min,
-        to: max
+        from: Number(from),
+        to: Number(to),
+        sale: Number(sale),
+        ...rest
       });
     } catch (err) {
       console.log(err);
     }
   }
 
-  _handleCategory({ name, value }) {
+  componentWillUnmount() {
+    window.removeEventListener("popstate", this.setStateFromURL);
+  }
+
+  handleCategory({ name, value }) {
     const categories = this.state.categories.map(cat => {
       if (name === cat.name) {
         return {
@@ -67,44 +80,98 @@ class App extends PureComponent {
       return cat;
     });
 
-    this.setState({
-      categories
+    this.setState(
+      () => ({
+        categories
+      }),
+      this.setStateToURL
+    );
+  }
+
+  getActiveCategiriesNames() {
+    const names = [];
+    this.state.categories.forEach(({ value, name }) => {
+      if (value) {
+        names.push(name);
+      }
+    });
+
+    return names;
+  }
+
+  getStateFromUrl = () => {
+    const { categories, ...rest } = getFromHistory();
+
+    const state = {
+      ...rest
+    };
+
+    if (categories) {
+      const selectedCategories = this.state.categories.map(cat => {
+        const isEnabled =
+          cat.name === categories ||
+          (Array.isArray(categories) &&
+            categories.some(name => name === cat.name));
+
+        if (isEnabled) {
+          return {
+            ...cat,
+            value: true
+          };
+        }
+
+        return cat;
+      });
+
+      state.categories = selectedCategories;
+    }
+
+    return state;
+  };
+
+  setStateFromURL = () => {
+    const newState = this.getStateFromUrl();
+
+    this.setState(newState);
+  };
+
+  setStateToURL() {
+    const { from, to, sale } = this.state;
+
+    setToHistory({
+      categories: this.getActiveCategiriesNames(),
+      from,
+      to,
+      sale
     });
   }
 
-  getFromHistory = () => {
-    const { search } = window.location;
-
-    console.log(queryString.parse(search));
-    return {
-      ...queryString.parse(search)
-    };
-  };
-
-  handleHistoryChange = () => {
-    window.history.pushState({ data: "asdsd" }, "title", window.location.href);
-  };
-
   onFilterChange = ({ name, value, type }) => {
     if (type === "checkbox") {
-      this._handleCategory({ name, value });
+      this.handleCategory({ name, value });
       return;
     }
 
-    this.handleHistoryChange();
-
-    this.setState({
-      [name]: Number(value)
-    });
+    this.setState(
+      () => ({
+        [name]: Number(value)
+      }),
+      this.setStateToURL
+    );
   };
 
   onFilterReset = () => {
     const { min, max } = this.state;
-    this.setState({
-      from: min,
-      to: max,
-      ...BASE_STATE
-    });
+    this.setState(
+      () => ({
+        from: min,
+        to: max,
+        ...BASE_STATE
+      }),
+      () => {
+        window.history.pushState(null, null, "/");
+      }
+    );
   };
 
   getProducts = memoizeByProps((products, from, to, sale, categoriesNames) => {
