@@ -306,7 +306,10 @@ module.exports = function(webpackEnv) {
         assets: path.resolve(__dirname, "../src/assets"),
         helpers: path.resolve(__dirname, "../src/utils/helpers"),
         constants: path.resolve(__dirname, "../src/utils/constants"),
-        context: path.resolve(__dirname, "../src/context")
+        context: path.resolve(__dirname, "../src/context"),
+        rdx: path.resolve(__dirname, "../src/redux"),
+        data: path.resolve(__dirname, "../src/data"),
+        containers: path.resolve(__dirname, "../src/containers")
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
