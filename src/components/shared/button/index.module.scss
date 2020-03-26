@@ -7,11 +7,13 @@
   font-family: var(--font-family-primary);
   color: #fff;
   border: none;
-  padding: 9px 15px;
+  padding: 8px 14px;
   background-color: #323c48;
   transition: background-color 0.2s;
+  border: 1px solid #323c48;
 
   &:hover {
+    border-color: #384d66;
     background-color: #384d66;
   }
 
@@ -24,6 +26,16 @@
   &--full {
     display: block;
     width: 100%;
+  }
+
+  &--light {
+    background-color: #fff;
+    border-color: #323c48;
+    color: #323c48;
+
+    &:hover {
+      color: #fff;
+    }
   }
 
   &__spinner {

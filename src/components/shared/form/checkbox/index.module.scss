@@ -1,0 +1,36 @@
+.checkbox {
+  $this: &;
+
+  display: inline-block;
+  vertical-align: top;
+
+  &__text {
+    display: block;
+    color: #7e8fa4;
+    padding: 7px 15px;
+    border: 1px solid currentColor;
+    text-align: center;
+    line-height: 1;
+    font-size: 14px;
+    user-select: none;
+    border-radius: 15px;
+  }
+
+  &__field {
+    position: absolute;
+    border: 0;
+    margin: -1px;
+    padding: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0px, 0px, 0px, 0px);
+
+    &:checked {
+      + #{$this}__text {
+        color: #fff;
+        background-color: #323c48;
+      }
+    }
+  }
+}

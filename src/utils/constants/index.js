@@ -32,3 +32,7 @@ export const BUTTON_TYPES = {
   reset: "reset",
   submit: "submit"
 };
+
+export const BUTTON_VARIANTS = {
+  light: "light"
+};

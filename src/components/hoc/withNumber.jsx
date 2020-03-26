@@ -6,11 +6,12 @@ const withNumber = WrappedComponent =>
   class extends PureComponent {
     onInputChange = e => {
       const {
-        target: { name, value }
+        target: { name, value, type }
       } = e;
 
       this.props.onChange({
         name,
+        type,
         value: Number(value.replace(ONLY_NUMBERS_REGEXP, ""))
       });
     };
