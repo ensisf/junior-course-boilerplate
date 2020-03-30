@@ -6,6 +6,7 @@ import {
   SET_ERROR
 } from "rdx/action-types";
 import { getMaxMinPrice } from "helpers";
+import { setFilter } from "rdx/actions";
 
 export const addProducts = products => ({
   type: ADD_PRODUCTS,
@@ -39,6 +40,12 @@ export const fetchProducts = () => async dispatch => {
     const priceRange = getMaxMinPrice(products);
 
     dispatch(setPriceRange(priceRange));
+    dispatch(
+      setFilter({
+        from: priceRange.min,
+        to: priceRange.max
+      })
+    );
 
     dispatch(addProducts(products));
 

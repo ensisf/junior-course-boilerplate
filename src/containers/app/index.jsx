@@ -12,6 +12,7 @@ import { Spinner } from "components/shared/spinner";
 import { withLogger } from "hoc";
 import { getFiltersFromUrl } from "helpers";
 import { CATEGORIES } from "constants";
+import { isEmpty } from "ramda";
 
 import styled from "./index.module.scss";
 
@@ -33,6 +34,7 @@ const App = props => {
 
   const applyFiltersFromUrl = () => {
     const filters = getFiltersFromUrl();
+    if (isEmpty(filters)) return;
     filterChange({ ...priceRange, ...filters });
   };
 

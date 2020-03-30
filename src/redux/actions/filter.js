@@ -1,5 +1,5 @@
 import { RESET_FILTER, SET_FILTER } from "rdx/action-types";
-import { getActiveCategiriesNames } from "rdx/actions/helpers";
+import { getActiveCategoriesNames } from "rdx/actions/helpers";
 import { setToHistory } from "helpers";
 import { isEmpty, clone } from "ramda";
 import { CATEGORIES } from "constants";
@@ -38,13 +38,11 @@ export const saveFilterToUrl = () => (_dispatch, getState) => {
     from,
     to,
     sale,
-    categories: categories && getActiveCategiriesNames(categories)
+    categories: categories && getActiveCategoriesNames(categories)
   });
 };
 
 export const filterChange = payload => dispatch => {
-  console.log(payload);
-
   dispatch(setFilter(payload));
 
   if (isEmpty(payload)) return;
