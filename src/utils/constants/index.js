@@ -36,3 +36,8 @@ export const BUTTON_TYPES = {
 export const BUTTON_VARIANTS = {
   light: "light"
 };
+
+export const CATEGORIES = [
+  { value: false, name: "clothes", label: "Clothes" },
+  { value: false, name: "books", label: "Books" }
+];
