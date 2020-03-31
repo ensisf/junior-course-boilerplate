@@ -17,6 +17,7 @@ export const fetchProducts = () => async dispatch => {
     const priceRange = getMaxMinPrice(products);
 
     dispatch(setPriceRange(priceRange));
+
     dispatch(
       setFilter({
         from: priceRange.min,

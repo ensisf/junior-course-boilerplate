@@ -3,11 +3,15 @@ import {
   START_LOADING,
   END_LOADING,
   SET_PRICE_RANGE,
-  SET_ERROR
+  SET_ERROR,
+  SET_PAGE
 } from "rdx/products/types";
+import { ITEMS_PER_PAGE } from "constants";
 
 const INITIAL_STATE = {
   products: [],
+  itemsPerPage: ITEMS_PER_PAGE,
+  page: 1,
   priceRange: {
     min: 0,
     max: 0
@@ -18,7 +22,7 @@ const INITIAL_STATE = {
 
 const productsReducer = (
   state = INITIAL_STATE,
-  { type, products, error, priceRange }
+  { type, products, error, priceRange, page }
 ) => {
   switch (type) {
     case UPDATE:
@@ -35,6 +39,9 @@ const productsReducer = (
 
     case SET_ERROR:
       return { ...state, error };
+
+    case SET_PAGE:
+      return { ...state, page };
 
     default:
       return state;

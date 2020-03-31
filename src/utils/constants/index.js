@@ -41,3 +41,7 @@ export const CATEGORIES = [
   { value: false, name: "clothes", label: "Clothes" },
   { value: false, name: "books", label: "Books" }
 ];
+
+export const ITEMS_PER_PAGE = 6;
+
+export const START_PAGE_NUMBER = 1;
