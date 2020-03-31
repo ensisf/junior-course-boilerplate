@@ -1,35 +1,12 @@
 import {
-  ADD_PRODUCTS,
-  START_LOADING,
-  END_LOADING,
-  SET_PRICE_RANGE,
-  SET_ERROR
-} from "rdx/action-types";
+  addProducts,
+  startLoading,
+  endLoading,
+  setError,
+  setPriceRange
+} from "rdx/products/actions.js";
+import { setFilter } from "rdx/filter";
 import { getMaxMinPrice } from "helpers";
-import { setFilter } from "rdx/actions";
-
-export const addProducts = products => ({
-  type: ADD_PRODUCTS,
-  products
-});
-
-const startLoading = () => ({
-  type: START_LOADING
-});
-
-const endLoading = () => ({
-  type: END_LOADING
-});
-
-const setError = error => ({
-  type: SET_ERROR,
-  error
-});
-
-const setPriceRange = priceRange => ({
-  type: SET_PRICE_RANGE,
-  priceRange
-});
 
 export const fetchProducts = () => async dispatch => {
   try {

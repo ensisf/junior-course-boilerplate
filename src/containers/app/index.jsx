@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import ProductCard from "csssr-school-product-card";
 
-import { fetchProducts, restoreFilter, filterChange } from "rdx/actions";
-import { filteredProducts, filterProps } from "rdx/selectors";
+import { restoreFilter, filterChange, getFilterProps } from "rdx/filter";
+import { fetchProducts, getFilteredProducts } from "rdx/products";
 
 import { Heading } from "components/shared/heading";
 import { Grid } from "components/shared/grid";
@@ -125,8 +125,8 @@ const mapStateToProps = state => {
     priceRange,
     isLoading,
     error,
-    filterProps: filterProps(state),
-    products: filteredProducts(state),
+    filterProps: getFilterProps(state),
+    products: getFilteredProducts(state),
     filter
   };
 };

@@ -8,7 +8,7 @@ export const getProducts = state => state.products.products;
 export const getSelectedCategories = state =>
   state.filter.categories.filter(({ value }) => value).map(({ name }) => name);
 
-export const filteredProducts = createSelector(
+export const getFilteredProducts = createSelector(
   [getProducts, getFilters, getSelectedCategories],
   (products, filter, selectedCategories) => {
     const { from, to, sale } = filter;

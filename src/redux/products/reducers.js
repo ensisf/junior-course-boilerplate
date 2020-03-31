@@ -1,10 +1,10 @@
 import {
-  ADD_PRODUCTS,
+  UPDATE,
   START_LOADING,
   END_LOADING,
   SET_PRICE_RANGE,
   SET_ERROR
-} from "rdx/action-types";
+} from "rdx/products/types";
 
 const INITIAL_STATE = {
   products: [],
@@ -16,12 +16,12 @@ const INITIAL_STATE = {
   isLoading: false
 };
 
-export const products = (
+const productsReducer = (
   state = INITIAL_STATE,
   { type, products, error, priceRange }
 ) => {
   switch (type) {
-    case ADD_PRODUCTS:
+    case UPDATE:
       return { ...state, products };
 
     case SET_PRICE_RANGE:
@@ -40,3 +40,5 @@ export const products = (
       return state;
   }
 };
+
+export default productsReducer;

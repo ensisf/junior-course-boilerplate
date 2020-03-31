@@ -1,16 +1,16 @@
-import { RESET_FILTER, SET_FILTER } from "rdx/action-types";
-import { getActiveCategoriesNames } from "rdx/actions/helpers";
+import { RESET, UPDATE } from "rdx/filter/types";
+import { getActiveCategoriesNames } from "rdx/helpers";
 import { setToHistory } from "helpers";
 import { isEmpty, clone } from "ramda";
 import { CATEGORIES } from "constants";
 
 export const resetFilter = payload => ({
-  type: RESET_FILTER,
+  type: RESET,
   payload
 });
 
 export const setFilter = payload => ({
-  type: SET_FILTER,
+  type: UPDATE,
   payload
 });
 

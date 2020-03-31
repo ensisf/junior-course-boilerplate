@@ -1,6 +1,6 @@
 import { clone } from "ramda";
 
-import { RESET_FILTER, SET_FILTER } from "rdx/action-types";
+import { RESET, UPDATE } from "rdx/filter/types";
 import { CATEGORIES } from "constants";
 
 const INITIAL_STATE = {
@@ -10,15 +10,17 @@ const INITIAL_STATE = {
   categories: clone(CATEGORIES)
 };
 
-export const filter = (state = INITIAL_STATE, { type, payload }) => {
+const filterReducer = (state = INITIAL_STATE, { type, payload }) => {
   switch (type) {
-    case SET_FILTER:
+    case UPDATE:
       return { ...state, ...payload };
 
-    case RESET_FILTER:
+    case RESET:
       return payload;
 
     default:
       return state;
   }
 };
+
+export default filterReducer;
