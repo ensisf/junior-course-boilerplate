@@ -16,8 +16,12 @@ export const getPageData = state => {
   };
 };
 
-export const getSelectedCategories = state =>
-  state.filter.categories.filter(({ value }) => value).map(({ name }) => name);
+const getCategories = state => state.filter.categories;
+
+export const getSelectedCategories = createSelector(
+  [getCategories],
+  categories => categories.filter(({ value }) => value).map(({ name }) => name)
+);
 
 export const getFilteredProducts = createSelector(
   [getProducts, getFilters, getSelectedCategories],
