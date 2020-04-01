@@ -120,11 +120,13 @@ const App = props => {
                 <ProductCardWithLogger ratingComponent={Rating} {...props} />
               )}
             />
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={updateCurrentPage}
-            />
+            {products.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={updateCurrentPage}
+              />
+            )}
           </div>
         )}
       </div>
