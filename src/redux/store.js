@@ -1,6 +1,13 @@
 import { createStore, compose, applyMiddleware } from "redux";
-import { rootReducer } from "rdx/reducers";
 import { thunk } from "rdx/middlewares";
+import { combineReducers } from "redux";
+import products from "rdx/products";
+import filter from "rdx/filter";
+
+const rootReducer = combineReducers({
+  products,
+  filter
+});
 
 const composeEnhancers =
   (typeof window !== "undefined" &&

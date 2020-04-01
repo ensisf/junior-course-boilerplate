@@ -1,16 +1,13 @@
-import { RESET_FILTER, SET_FILTER } from "rdx/action-types";
-import { getActiveCategoriesNames } from "rdx/actions/helpers";
+import { UPDATE } from "rdx/filter/types";
+import { getActiveCategoriesNames } from "rdx/helpers";
+import { updateCurrentPage } from "rdx/products";
 import { setToHistory } from "helpers";
 import { isEmpty, clone } from "ramda";
-import { CATEGORIES } from "constants";
-
-export const resetFilter = payload => ({
-  type: RESET_FILTER,
-  payload
-});
+import { CATEGORIES, START_PAGE_NUMBER } from "constants";
+import { setCurrentPage } from "rdx/products";
 
 export const setFilter = payload => ({
-  type: SET_FILTER,
+  type: UPDATE,
   payload
 });
 
@@ -26,23 +23,29 @@ export const restoreFilter = () => (dispatch, getState) => {
     categories: clone(CATEGORIES)
   };
 
+  dispatch(updateCurrentPage(START_PAGE_NUMBER));
+
   dispatch(setFilter(payload));
 };
 
 export const saveFilterToUrl = () => (_dispatch, getState) => {
   const {
-    filter: { from, to, sale, categories }
+    filter: { from, to, sale, categories },
+    products: { page }
   } = getState();
 
   setToHistory({
     from,
     to,
+    page,
     sale,
     categories: categories && getActiveCategoriesNames(categories)
   });
 };
 
 export const filterChange = payload => dispatch => {
+  dispatch(setCurrentPage(payload.page || START_PAGE_NUMBER));
+
   dispatch(setFilter(payload));
 
   if (isEmpty(payload)) return;

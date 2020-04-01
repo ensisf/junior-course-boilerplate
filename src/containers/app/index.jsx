@@ -2,11 +2,17 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import ProductCard from "csssr-school-product-card";
 
-import { fetchProducts, restoreFilter, filterChange } from "rdx/actions";
-import { filteredProducts, filterProps } from "rdx/selectors";
+import { restoreFilter, filterChange, getFilterProps } from "rdx/filter";
+import {
+  fetchProducts,
+  updateCurrentPage,
+  getTotalPages,
+  getCurrentPageProducts
+} from "rdx/products";
 
 import { Heading } from "components/shared/heading";
 import { Grid } from "components/shared/grid";
+import { Pagination } from "components/shared/pagination";
 import { PriceFilter } from "components/price-filter";
 import { Spinner } from "components/shared/spinner";
 import { withLogger } from "hoc";
@@ -25,7 +31,10 @@ const App = props => {
     isLoading,
     error,
     products,
+    updateCurrentPage,
+    currentPage,
     priceRange,
+    totalPages,
     filterProps,
     fetchProducts,
     filterChange,
@@ -101,14 +110,24 @@ const App = props => {
             <Spinner size="3em" />
           </div>
         ) : (
-          <Grid
-            columnsCount={3}
-            items={products}
-            emptyListPlaceholder="По заданным параметрам ничего не найдено."
-            render={props => (
-              <ProductCardWithLogger ratingComponent={Rating} {...props} />
+          <div>
+            <Grid
+              columnsCount={3}
+              className={styled.products__list}
+              items={products}
+              emptyListPlaceholder="По заданным параметрам ничего не найдено."
+              render={props => (
+                <ProductCardWithLogger ratingComponent={Rating} {...props} />
+              )}
+            />
+            {products.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={updateCurrentPage}
+              />
             )}
-          />
+          </div>
         )}
       </div>
     </div>
@@ -118,20 +137,27 @@ const App = props => {
 const mapStateToProps = state => {
   const {
     filter,
-    products: { isLoading, error, priceRange }
+    products: { isLoading, error, priceRange, page }
   } = state;
 
   return {
     priceRange,
     isLoading,
     error,
-    filterProps: filterProps(state),
-    products: filteredProducts(state),
+    totalPages: getTotalPages(state),
+    currentPage: page,
+    filterProps: getFilterProps(state),
+    products: getCurrentPageProducts(state),
     filter
   };
 };
 
-const mapActionsToProps = { fetchProducts, restoreFilter, filterChange };
+const mapActionsToProps = {
+  fetchProducts,
+  restoreFilter,
+  filterChange,
+  updateCurrentPage
+};
 
 const withStore = connect(mapStateToProps, mapActionsToProps)(App);
 
