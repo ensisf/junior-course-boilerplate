@@ -2,32 +2,19 @@ import React from "react";
 import { withLogger } from "hoc";
 import { FormControl } from "components/shared/form/form-control";
 import { FormNumberField } from "components/shared/form/form-number-field";
-import { Checkbox } from "components/shared/form/checkbox";
 import { Button } from "components/shared/button";
 import Discount from "csssr-school-input-discount";
 import PropTypes from "prop-types";
 import styled from "./index.module.scss";
 import { Heading } from "components/shared/heading";
 import { withNumber } from "hoc";
+import { BUTTON_VARIANTS } from "constants";
+import { useRoute, useQuery } from "hooks";
 
 const DiscountWithNumber = withNumber(Discount);
 
-const onCheckboxChange = fn => {
-  return e => {
-    const {
-      target: { name, type, checked }
-    } = e;
-
-    fn({
-      name,
-      value: checked,
-      type
-    });
-  };
-};
-
 const BaseFilter = ({
-  onSubmit = e => e.preventDefault(),
+  onSubmit = (e) => e.preventDefault(),
   from = 0,
   to = 0,
   min = 0,
@@ -35,17 +22,30 @@ const BaseFilter = ({
   sale = 0,
   categories,
   onChange,
-  onReset,
+  onReset = () => {},
   className = "",
   ...attrs
 }) => {
+  const createRoute = useRoute();
+
+  const getRoute = (categoryName) =>
+    createRoute({ category: categoryName, page: 1 });
+
+  const { category } = useQuery();
+
+  const getBtnVariant = (categoryName) => {
+    const { primary, light } = BUTTON_VARIANTS;
+
+    return categoryName === category ? primary : light;
+  };
+
   return (
     <form
       onSubmit={onSubmit}
-      className={`${styled.priceFilter} ${className}`}
+      className={`${styled.filter} ${className}`}
       {...attrs}
     >
-      <Heading level={3} className={styled.priceFilter__title}>
+      <Heading level={3} className={styled.filter__title}>
         Список товаров
       </Heading>
       <FormControl isHorizontal label="От">
@@ -70,7 +70,7 @@ const BaseFilter = ({
           value={to}
         />
       </FormControl>
-      <div className={styled.priceFilter__box}>
+      <div className={styled.filter__box}>
         <DiscountWithNumber
           onChange={onChange}
           title="Скидка"
@@ -80,29 +80,31 @@ const BaseFilter = ({
       </div>
       {categories && categories.length && (
         <>
-          <Heading level={3} className={styled.priceFilter__title}>
+          <Heading level={3} className={styled.filter__title}>
             Категории
           </Heading>
-          <div className={styled.priceFilter__box}>
-            {categories.map(({ value, label, name }) => (
-              <Checkbox
-                className={styled.priceFilter__category}
-                key={label}
-                checked={value}
-                name={name}
-                onChange={onCheckboxChange(onChange)}
+          <div className={styled.filter__box}>
+            {categories.map(({ label, name }) => (
+              <Button
+                key={name}
+                component="routerLink"
+                variant={getBtnVariant(name)}
+                pill
+                to={getRoute(name)}
+                className={styled.filter__category}
               >
                 {label}
-              </Checkbox>
+              </Button>
             ))}
           </div>
         </>
       )}
       <Button
-        type="reset"
-        variant="light"
+        variant={BUTTON_VARIANTS.light}
+        component="routerLink"
+        to="/"
+        className={styled.filter__box}
         onClick={onReset}
-        className={styled.priceFilter__box}
       >
         Сбросить фильтры
       </Button>
@@ -118,16 +120,15 @@ BaseFilter.propTypes = {
   max: PropTypes.number.isRequired,
   sale: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   onChange: PropTypes.func.isRequired,
-  onReset: PropTypes.func.isRequired,
+  onReset: PropTypes.func,
   categories: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.bool.isRequired,
       label: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired
+      name: PropTypes.string.isRequired,
     })
-  )
+  ),
 };
 
-const PriceFilter = withLogger(BaseFilter, "PriceFilter");
+const Filter = withLogger(BaseFilter, "Filter");
 
-export { PriceFilter };
+export { Filter };

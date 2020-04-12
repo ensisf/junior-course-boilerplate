@@ -17,6 +17,12 @@ body {
   min-height: 100vh;
 }
 
-.app {
-  display: flex;
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  width: 1318px;
+  margin: 0 auto;
 }

@@ -1,0 +1,17 @@
+.pageLayout {
+  &__title {
+    margin-bottom: 80px;
+    text-align: center;
+  }
+
+  &__backLink {
+    display: inline-block;
+    vertical-align: 5px;
+    padding-right: 20px;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+}

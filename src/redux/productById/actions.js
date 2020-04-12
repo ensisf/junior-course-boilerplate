@@ -1,14 +1,17 @@
 import {
   UPDATE,
+  RESET,
   START_LOADING,
   END_LOADING,
-  SET_PRICE_RANGE,
   SET_ERROR,
-} from "rdx/products/types";
+} from "rdx/productById/types";
 
-export const addProducts = (products) => ({
+export const addProduct = (product) => ({
   type: UPDATE,
-  products,
+  product,
+});
+export const resetProduct = () => ({
+  type: RESET,
 });
 
 export const startLoading = () => ({
@@ -22,9 +25,4 @@ export const endLoading = () => ({
 export const setError = (error) => ({
   type: SET_ERROR,
   error,
-});
-
-export const setPriceRange = (priceRange) => ({
-  type: SET_PRICE_RANGE,
-  priceRange,
 });

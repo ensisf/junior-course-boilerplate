@@ -7,12 +7,12 @@ export const HEADINGS_MAP = objToMap({
   h4: "h4",
   h5: "h5",
   h6: "h6",
-  default: "h1"
+  default: "h1",
 });
 
 export const FIELD_TYPES = {
   input: "input",
-  textarea: "textarea"
+  textarea: "textarea",
 };
 
 export const INPUT_TYPES = {
@@ -20,28 +20,34 @@ export const INPUT_TYPES = {
   number: "number",
   tel: "tel",
   email: "email",
-  search: "search"
+  search: "search",
 };
 
 export const BUTTON_SIZES = {
-  lg: "lg"
+  lg: "lg",
 };
 
 export const BUTTON_TYPES = {
   button: "button",
   reset: "reset",
-  submit: "submit"
+  submit: "submit",
 };
 
 export const BUTTON_VARIANTS = {
-  light: "light"
+  light: "light",
+  primary: "primary",
+  link: "link",
 };
 
 export const CATEGORIES = [
-  { value: false, name: "clothes", label: "Clothes" },
-  { value: false, name: "books", label: "Books" }
+  { name: "clothes", label: "Clothes" },
+  { name: "books", label: "Books" },
 ];
 
 export const ITEMS_PER_PAGE = 6;
 
 export const START_PAGE_NUMBER = 1;
+
+export const ERROR_CODES = {
+  notFound: 404,
+};
