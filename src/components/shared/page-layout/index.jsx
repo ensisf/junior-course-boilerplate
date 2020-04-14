@@ -3,7 +3,6 @@ import { Link, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import styled from "./styles.module.scss";
-import Arrow from "assets/img/arrow.svg";
 
 import { Heading } from "components/shared/heading";
 
@@ -22,9 +21,7 @@ const PageLayout = ({ className = "", title, children, ...attrs }) => {
           to="/"
           className={styled.pageLayout__backLink}
           onClick={onHistoryBack}
-        >
-          <img src={Arrow} alt="Back" />
-        </Link>
+        ></Link>
         {title}
       </Heading>
       {children}
