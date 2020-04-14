@@ -22,6 +22,7 @@ const BaseFilter = ({
   sale = 0,
   categories,
   onChange,
+  onCategoryClick = () => {},
   onReset = () => {},
   className = "",
   ...attrs
@@ -36,7 +37,11 @@ const BaseFilter = ({
   const getBtnVariant = (categoryName) => {
     const { primary, light } = BUTTON_VARIANTS;
 
-    return categoryName === category ? primary : light;
+    if (!Array.isArray(category)) {
+      return categoryName === category ? primary : light;
+    }
+
+    return category.some((cat) => cat === categoryName);
   };
 
   return (
@@ -87,6 +92,8 @@ const BaseFilter = ({
             {categories.map(({ label, name }) => (
               <Button
                 key={name}
+                onClick={onCategoryClick}
+                data-category={name}
                 component="routerLink"
                 variant={getBtnVariant(name)}
                 pill
@@ -120,6 +127,7 @@ BaseFilter.propTypes = {
   max: PropTypes.number.isRequired,
   sale: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   onChange: PropTypes.func.isRequired,
+  onCategoryClick: PropTypes.func,
   onReset: PropTypes.func,
   categories: PropTypes.arrayOf(
     PropTypes.shape({

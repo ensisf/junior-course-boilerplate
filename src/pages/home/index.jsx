@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import ProductCard from "csssr-school-product-card";
+import queryString from "query-string";
 
 import { filterChange, resetFilter, getFilterProps } from "rdx/filter";
 import { useQuery, useRoute } from "hooks";
@@ -56,6 +57,31 @@ const Home = ({
     history.push(createRoute(payload));
   };
 
+  const onCategoryClick = (e) => {
+    e.preventDefault();
+    const newCategory = e.target.dataset.category;
+
+    let payload = {
+      category: [],
+    };
+
+    if (query.category === undefined) {
+      payload.category = newCategory;
+    } else {
+      const selected = Array.isArray(query.category)
+        ? query.category
+        : [query.category];
+
+      if (selected.some((cat) => cat === newCategory)) {
+        payload.category = selected.filter((cat) => cat !== newCategory);
+      } else {
+        payload.category.push(...selected, newCategory);
+      }
+    }
+
+    history.push(createRoute(payload));
+  };
+
   useEffect(() => {
     (async () => {
       await fetchProducts();
@@ -67,7 +93,12 @@ const Home = ({
   return (
     <div className={styled.products}>
       <Heading className={styled.products__title}>Список товаров</Heading>
-      <Filter onChange={onFilterChange} onReset={resetFilter} {...filterProps} />
+      <Filter
+        onCategoryClick={onCategoryClick}
+        onChange={onFilterChange}
+        onReset={resetFilter}
+        {...filterProps}
+      />
       {error ? (
         "Something unexpected happened."
       ) : isLoading ? (
