@@ -1,36 +1,24 @@
 import { formatPrice } from "helpers";
 import { createSelector } from "reselect";
-import { compose, slice, filter, map } from "ramda";
+import { compose, slice, filter, map, pathOr } from "ramda";
 import { ITEMS_PER_PAGE } from "constants";
 
-export const getFilters = state => state.filter;
+export const getFilters = (state) => state.filter;
 
-export const getProducts = state => state.products.products;
+export const getQuery = (state) => state.router.location.query;
 
-export const getPageData = state => {
-  const { itemsPerPage, page } = state.products;
-
-  return {
-    itemsPerPage,
-    page
-  };
-};
-
-const getCategories = state => state.filter.categories;
-
-export const getSelectedCategories = createSelector(
-  [getCategories],
-  categories => categories.filter(({ value }) => value).map(({ name }) => name)
-);
+export const getProducts = (state) => state.products.products;
 
 export const getFilteredProducts = createSelector(
-  [getProducts, getFilters, getSelectedCategories],
-  (products, filterData, selectedCategories) => {
+  [getProducts, getFilters, getQuery],
+  (products, filterData, query) => {
+    const { category } = query;
+
     const { from, to, sale } = filterData;
 
     const filterProducts = ({ price, discount, categories }) => {
-      const satisfyCategory = selectedCategories.length
-        ? selectedCategories.every(cat => categories.includes(cat))
+      const satisfyCategory = category
+        ? categories.some((cat) => category === cat)
         : true;
 
       return (
@@ -43,29 +31,49 @@ export const getFilteredProducts = createSelector(
 
     const formatProducts = ({ price, ...rest }) => ({
       price: formatPrice(price),
-      ...rest
+      ...rest,
     });
 
     return compose(map(formatProducts), filter(filterProducts))(products);
   }
 );
 
+export const getPageData = (state) => {
+  const { itemsPerPage } = state.products;
+  const page = pathOr(1, ["router", "location", "query", "page"], state);
+
+  return {
+    itemsPerPage,
+    page: Number(page),
+  };
+};
+
+export const getPaginationData = createSelector(
+  [getPageData, getFilteredProducts],
+  ({ itemsPerPage, page }, filteredProducts) => {
+    let totalPages = 1;
+
+    const { length } = filteredProducts;
+
+    if (length) {
+      totalPages = Math.ceil(length / ITEMS_PER_PAGE);
+    }
+
+    return {
+      itemsPerPage,
+      page,
+      totalPages,
+    };
+  }
+);
+
 export const getCurrentPageProducts = createSelector(
-  [getFilteredProducts, getPageData],
+  [getFilteredProducts, getPaginationData],
   (products, pageData) => {
     const { itemsPerPage, page } = pageData;
     return slice(
       page * itemsPerPage - itemsPerPage,
       itemsPerPage * page
     )(products);
-  }
-);
-
-export const getTotalPages = createSelector(
-  [getFilteredProducts],
-  filteredProducts => {
-    const { length } = filteredProducts;
-    if (!length) return 1;
-    return Math.ceil(length / ITEMS_PER_PAGE);
   }
 );
