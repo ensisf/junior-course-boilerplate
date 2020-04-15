@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import ProductCard from "csssr-school-product-card";
-import queryString from "query-string";
+import { Link, useHistory } from "react-router-dom";
 
 import { filterChange, resetFilter, getFilterProps } from "rdx/filter";
 import { useQuery, useRoute } from "hooks";
@@ -16,14 +16,16 @@ import { Heading } from "components/shared/heading";
 import { Grid } from "components/shared/grid";
 import { Pagination } from "components/shared/pagination";
 import { Filter } from "components/filter";
-import { Spinner } from "components/shared/spinner";
 import { Rating } from "components/shared/rating";
 import { withLogger } from "hoc";
 
+import EmptyListPlaceholder from "assets/img/ill-planet.svg";
+import Placeholder from "assets/img/placeholder.svg";
 import styled from "./index.module.scss";
-import { Link, useHistory } from "react-router-dom";
 
 const ProductCardWithLogger = withLogger(ProductCard, "ProductCard");
+
+const loadingItems = Array.from({ length: 6 }).map((_, idx) => ({ idx }));
 
 const Home = ({
   isLoading,
@@ -78,7 +80,6 @@ const Home = ({
         payload.category.push(...selected, newCategory);
       }
     }
-
     history.push(createRoute(payload));
   };
 
@@ -90,30 +91,42 @@ const Home = ({
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
+  const title =
+    !isLoading && products.length === 0
+      ? "Товары не найдены"
+      : "Список товаров";
+
   return (
     <div className={styled.products}>
-      <Heading className={styled.products__title}>Список товаров</Heading>
+      <Heading className={styled.products__title}>{title}</Heading>
       <Filter
-        onCategoryClick={onCategoryClick}
         onChange={onFilterChange}
+        onCategoryClick={onCategoryClick}
         onReset={resetFilter}
         {...filterProps}
       />
       {error ? (
-        "Something unexpected happened."
+        error.message || "Something unexpected happened."
       ) : isLoading ? (
-        <div className={styled.products__loading}>
-          <Spinner size="3em" />
-        </div>
+        <Grid
+          columnsCount={3}
+          className={styled.products__list}
+          items={loadingItems}
+          keyValue="idx"
+          emptyListPlaceholder="По заданным параметрам ничего не найдено."
+          render={() => <img width="100%" src={Placeholder} alt="Loading..." />}
+        />
       ) : (
         <div>
           <Grid
             columnsCount={3}
             className={styled.products__list}
             items={products}
-            emptyListPlaceholder="По заданным параметрам ничего не найдено."
+            emptyListPlaceholder={
+              <img src={EmptyListPlaceholder} alt="Nothing found" />
+            }
             render={(props) => (
-              <Link to={`/${props.id}`} className={styled.products__link}>
+              <Link to={`/p/${props.id}`} className={styled.products__link}>
                 <ProductCardWithLogger ratingComponent={Rating} {...props} />
               </Link>
             )}

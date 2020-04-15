@@ -41,7 +41,7 @@ const BaseFilter = ({
       return categoryName === category ? primary : light;
     }
 
-    return category.some((cat) => cat === categoryName);
+    return category.some((cat) => cat === categoryName) ? primary : light;
   };
 
   return (
@@ -56,7 +56,7 @@ const BaseFilter = ({
       <FormControl isHorizontal label="От">
         <FormNumberField
           type="number"
-          step="1000"
+          step="10"
           onChange={onChange}
           name="from"
           min={min}
@@ -67,7 +67,7 @@ const BaseFilter = ({
       <FormControl isHorizontal label="До">
         <FormNumberField
           type="number"
-          step="1000"
+          step="10"
           onChange={onChange}
           name="to"
           min={min}

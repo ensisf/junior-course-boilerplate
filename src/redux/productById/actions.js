@@ -3,15 +3,18 @@ import {
   RESET,
   START_LOADING,
   END_LOADING,
-  SET_ERROR,
 } from "rdx/productById/types";
 
-export const addProduct = (product) => ({
-  type: UPDATE,
-  product,
-});
-export const resetProduct = () => ({
+export const resetProductId = () => ({
   type: RESET,
+});
+
+export const setProductId = (id) => ({
+  type: UPDATE,
+  id,
+  meta: {
+    requireProductsToBeLoaded: true,
+  },
 });
 
 export const startLoading = () => ({
@@ -20,9 +23,4 @@ export const startLoading = () => ({
 
 export const endLoading = () => ({
   type: END_LOADING,
-});
-
-export const setError = (error) => ({
-  type: SET_ERROR,
-  error,
 });

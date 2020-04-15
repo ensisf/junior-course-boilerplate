@@ -15,7 +15,7 @@ const INITIAL_STATE = {
     max: 0,
   },
   error: null,
-  isLoading: false,
+  isLoading: true,
 };
 
 const productsReducer = (
