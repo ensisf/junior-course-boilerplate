@@ -3,34 +3,26 @@ import {
   RESET,
   START_LOADING,
   END_LOADING,
-  SET_ERROR,
 } from "rdx/productById/types";
 
 const INITIAL_STATE = {
-  product: null,
-  error: null,
+  id: null,
   isLoading: false,
 };
 
-const productByIdReducer = (
-  state = INITIAL_STATE,
-  { type, product, error }
-) => {
+const productByIdReducer = (state = INITIAL_STATE, { type, id }) => {
   switch (type) {
     case UPDATE:
-      return { ...state, product };
+      return { ...state, id };
+
+    case RESET:
+      return { ...INITIAL_STATE };
 
     case START_LOADING:
       return { ...state, isLoading: true };
 
     case END_LOADING:
       return { ...state, isLoading: false };
-
-    case SET_ERROR:
-      return { ...state, error };
-
-    case RESET:
-      return { ...INITIAL_STATE };
 
     default:
       return state;

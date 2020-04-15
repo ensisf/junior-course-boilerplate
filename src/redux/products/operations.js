@@ -3,17 +3,23 @@ import {
   startLoading,
   endLoading,
   setError,
-  setPriceRange
+  setPriceRange,
 } from "rdx/products/actions.js";
 import { setFilter } from "rdx/filter";
 import { getMaxMinPrice } from "helpers";
+import { apiClient } from "api";
+import { RESPONSE_RESULTS } from "constants";
 
-export const fetchProducts = () => async dispatch => {
+export const fetchProducts = () => async (dispatch) => {
   try {
     dispatch(startLoading());
 
-    const data = await import("data/products.json");
-    const products = data.default;
+    const { result, products, message } = await apiClient.get({
+      url: "/products",
+    });
+
+    if (result === RESPONSE_RESULTS.ERROR) throw Error(message);
+
     const priceRange = getMaxMinPrice(products);
 
     dispatch(setPriceRange(priceRange));
@@ -21,12 +27,10 @@ export const fetchProducts = () => async dispatch => {
     dispatch(
       setFilter({
         from: priceRange.min,
-        to: priceRange.max
+        to: priceRange.max,
       })
     );
-
     dispatch(addProducts(products));
-
     dispatch(endLoading());
   } catch (error) {
     dispatch(setError(error));
