@@ -1,14 +1,6 @@
 import React, { useEffect } from "react";
 import ProductCard from "csssr-school-product-card";
-import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
-
-import {
-  setProductId,
-  resetProductbyId,
-  getProductById,
-} from "rdx/productById";
-import { fetchProducts } from "rdx/products";
 
 import styled from "./index.module.scss";
 import Placeholder from "assets/img/placeholder.svg";
@@ -50,18 +42,4 @@ const Product = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  product: getProductById(state),
-  areProductsLoading: state.products.isLoading,
-  isProductLoading: state.productById.isLoading,
-});
-
-const mapActionsToProps = {
-  setProductId,
-  resetProductbyId,
-  fetchProducts,
-};
-
-const withStore = connect(mapStateToProps, mapActionsToProps)(Product);
-
-export { withStore as Product };
+export { Product };
