@@ -10,10 +10,20 @@ class ApiClient {
   }
 
   async get({ url, options = {} }) {
-    const response = await fetch(`${this.#config.BASE_URL}/${url}`, {
+    const response = await fetch(`${this.#config.BASE_URL}${url}`, {
       method: HTTP_METHODS.GET,
       ...options,
     });
+
+    return response.json();
+  }
+
+  async post({ url, options = {} }) {
+    const response = await fetch(`${this.#config.BASE_URL}${url}`, {
+      method: HTTP_METHODS.POST,
+      ...options,
+    });
+
     return response.json();
   }
 }
