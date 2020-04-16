@@ -26,3 +26,11 @@ img {
   width: 1318px;
   margin: 0 auto;
 }
+
+p {
+  margin-top: 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
