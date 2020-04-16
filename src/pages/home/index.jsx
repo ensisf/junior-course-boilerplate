@@ -1,22 +1,17 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
 import ProductCard from "csssr-school-product-card";
 import { Link, useHistory } from "react-router-dom";
 
-import { filterChange, resetFilter, getFilterProps } from "rdx/filter";
 import { useQuery, useRoute } from "hooks";
-
-import {
-  fetchProducts,
-  getPaginationData,
-  getCurrentPageProducts,
-} from "rdx/products";
+import { BUTTON_VARIANTS } from "constants";
 
 import { Heading } from "components/shared/heading";
 import { Grid } from "components/shared/grid";
 import { Pagination } from "components/shared/pagination";
 import { Filter } from "components/filter";
 import { Rating } from "components/shared/rating";
+import { Button } from "components/shared/button";
+import { BasketContainer } from "containers/basket";
 import { withLogger } from "hoc";
 
 import EmptyListPlaceholder from "assets/img/ill-planet.svg";
@@ -37,6 +32,8 @@ const Home = ({
   filterProps,
   fetchProducts,
   filterChange,
+  addToBasket,
+  removeFromBasket,
 }) => {
   const history = useHistory();
 
@@ -91,14 +88,22 @@ const Home = ({
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  const title =
+  const toggleProductInBasket = (id, isInBasket) => {
+    if (isInBasket) {
+      removeFromBasket(id);
+    } else {
+      addToBasket(id);
+    }
+  };
+
+  const pageTitle =
     !isLoading && products.length === 0
       ? "Товары не найдены"
       : "Список товаров";
 
   return (
     <div className={styled.products}>
-      <Heading className={styled.products__title}>{title}</Heading>
+      <Heading className={styled.products__title}>{pageTitle}</Heading>
       <Filter
         onChange={onFilterChange}
         onCategoryClick={onCategoryClick}
@@ -126,9 +131,22 @@ const Home = ({
               <img src={EmptyListPlaceholder} alt="Nothing found" />
             }
             render={(props) => (
-              <Link to={`/p/${props.id}`} className={styled.products__link}>
-                <ProductCardWithLogger ratingComponent={Rating} {...props} />
-              </Link>
+              <div>
+                <Link to={`/p/${props.id}`} className={styled.products__link}>
+                  <ProductCardWithLogger ratingComponent={Rating} {...props} />
+                </Link>
+                <br />
+                <Button
+                  isFull
+                  variant={BUTTON_VARIANTS.light}
+                  onClick={() =>
+                    toggleProductInBasket(props.id, props.isInBasket)
+                  }
+                >
+                  {" "}
+                  {props.isInBasket ? "Удалить" : "Добавить"}{" "}
+                </Button>
+              </div>
             )}
           />
           {products.length > 0 && (
@@ -136,35 +154,9 @@ const Home = ({
           )}
         </div>
       )}
+      <BasketContainer />
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  const {
-    filter,
-    products: { isLoading, error },
-  } = state;
-
-  const { page, totalPages } = getPaginationData(state);
-
-  return {
-    isLoading,
-    error,
-    totalPages,
-    currentPage: page,
-    filterProps: getFilterProps(state),
-    products: getCurrentPageProducts(state),
-    filter,
-  };
-};
-
-const mapActionsToProps = {
-  fetchProducts,
-  filterChange,
-  resetFilter,
-};
-
-const withStore = connect(mapStateToProps, mapActionsToProps)(Home);
-
-export { withStore as Home };
+export { Home };
