@@ -34,6 +34,5 @@ export const fetchProducts = () => async (dispatch) => {
     dispatch(endLoading());
   } catch (error) {
     dispatch(setError(error));
-    throw error;
   }
 };

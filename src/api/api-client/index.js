@@ -1,5 +1,5 @@
 import { HTTP_METHODS } from "constants";
-
+import { ApiError, apiErrorLogger } from "api/api-error";
 class ApiClient {
   #config = {};
 
@@ -10,14 +10,22 @@ class ApiClient {
   }
 
   async get({ url, options = {} }) {
+    const URL = `${this.#config.BASE_URL}/${url}`;
     try {
-      const response = await fetch(`${this.#config.BASE_URL}/${url}`, {
+      const response = await fetch(URL, {
         method: HTTP_METHODS.GET,
         ...options,
       });
       return response.json();
-    } catch (error) {
-      console.error("Error during fething data:", error);
+    } catch (err) {
+      const error = new ApiError({
+        extra: {
+          reuestError: err,
+          url: URL,
+        },
+        message: "Error during fething data",
+      });
+      apiErrorLogger(error);
       throw error;
     }
   }
