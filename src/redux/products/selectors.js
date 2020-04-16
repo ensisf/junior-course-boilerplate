@@ -5,6 +5,8 @@ import { ITEMS_PER_PAGE } from "constants";
 
 export const getFilters = (state) => state.filter;
 
+export const getProductsIdsInBasket = (state) => state.basket.productsIds;
+
 export const getQuery = (state) => state.router.location.query;
 
 export const getProducts = (state) => state.products.products;
@@ -58,12 +60,17 @@ export const getPaginationData = createSelector(
 );
 
 export const getCurrentPageProducts = createSelector(
-  [getFilteredProducts, getPaginationData],
-  (products, pageData) => {
+  [getFilteredProducts, getPaginationData, getProductsIdsInBasket],
+  (products, pageData, productsIdsInBasket) => {
     const { itemsPerPage, page } = pageData;
-    return slice(
-      page * itemsPerPage - itemsPerPage,
-      itemsPerPage * page
+    const addBasketFlag = (product) => ({
+      isInBasket: productsIdsInBasket.some((id) => id === product.id),
+      ...product,
+    });
+
+    return compose(
+      map(addBasketFlag),
+      slice(page * itemsPerPage - itemsPerPage, itemsPerPage * page)
     )(products);
   }
 );
