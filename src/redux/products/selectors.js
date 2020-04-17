@@ -1,4 +1,4 @@
-import { formatPrice } from "helpers";
+import { formatProduct } from "helpers";
 import { createSelector } from "reselect";
 import { compose, slice, filter, map, pathOr } from "ramda";
 import { ITEMS_PER_PAGE } from "constants";
@@ -12,29 +12,19 @@ export const getProducts = (state) => state.products.products;
 export const getFilteredProducts = createSelector(
   [getProducts, getFilters, getQuery],
   (products, filterData, query) => {
-    const { category } = query;
-
     const { from, to, sale } = filterData;
 
-    const filterProducts = ({ price, discount, categories }) => {
-      const satisfyCategory = category
-        ? categories.some((cat) => category === cat)
+    const filterProducts = ({ price, discount, category }) => {
+      const satisfyCategory = query.category
+        ? query.category.indexOf(category) !== -1
         : true;
 
       return (
-        price >= from &&
-        price <= to &&
-        discount >= sale / 100 &&
-        satisfyCategory
+        price >= from && price <= to && discount >= sale && satisfyCategory
       );
     };
 
-    const formatProducts = ({ price, ...rest }) => ({
-      price: formatPrice(price),
-      ...rest,
-    });
-
-    return compose(map(formatProducts), filter(filterProducts))(products);
+    return compose(map(formatProduct), filter(filterProducts))(products);
   }
 );
 

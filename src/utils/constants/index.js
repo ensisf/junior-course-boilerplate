@@ -51,3 +51,19 @@ export const START_PAGE_NUMBER = 1;
 export const ERROR_CODES = {
   notFound: 404,
 };
+
+export const HTTP_METHODS = {
+  GET: "GET",
+  POST: "POST",
+};
+
+export const BASE_URL = "https://course-api.csssr.school";
+
+export const PRODUCT_STATUSES = {
+  IN_STOCK: "IN_STOCK",
+};
+
+export const RESPONSE_RESULTS = {
+  ERROR: "ERROR",
+  OK: "OK",
+};
