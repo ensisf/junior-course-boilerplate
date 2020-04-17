@@ -16,9 +16,11 @@ export const getFilteredProducts = createSelector(
   (products, filterData, query) => {
     const { from, to, sale } = filterData;
 
+    const categories = query.category ? query.category.split(",") : [];
+
     const filterProducts = ({ price, discount, category }) => {
-      const satisfyCategory = query.category
-        ? query.category.indexOf(category) !== -1
+      const satisfyCategory = categories.length
+        ? categories.some((cat) => cat === category)
         : true;
 
       return (

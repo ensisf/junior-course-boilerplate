@@ -67,16 +67,15 @@ const Home = ({
     if (query.category === undefined) {
       payload.category = newCategory;
     } else {
-      const selected = Array.isArray(query.category)
-        ? query.category
-        : [query.category];
+      const selected = query.category.split(",");
 
       if (selected.some((cat) => cat === newCategory)) {
         payload.category = selected.filter((cat) => cat !== newCategory);
       } else {
-        payload.category.push(...selected, newCategory);
+        payload.category = [...new Set([...selected, newCategory])].join(",");
       }
     }
+
     history.push(createRoute(payload));
   };
 
@@ -130,21 +129,21 @@ const Home = ({
             emptyListPlaceholder={
               <img src={EmptyListPlaceholder} alt="Nothing found" />
             }
-            render={(props) => (
+            render={({ id, isInBasket, ...restProps }) => (
               <div>
-                <Link to={`/p/${props.id}`} className={styled.products__link}>
-                  <ProductCardWithLogger ratingComponent={Rating} {...props} />
+                <Link to={`/p/${id}`} className={styled.products__link}>
+                  <ProductCardWithLogger
+                    ratingComponent={Rating}
+                    {...restProps}
+                  />
                 </Link>
                 <br />
                 <Button
                   isFull
                   variant={BUTTON_VARIANTS.light}
-                  onClick={() =>
-                    toggleProductInBasket(props.id, props.isInBasket)
-                  }
+                  onClick={() => toggleProductInBasket(id, isInBasket)}
                 >
-                  {" "}
-                  {props.isInBasket ? "Удалить" : "Добавить"}{" "}
+                  {isInBasket ? "Удалить" : "Добавить"}
                 </Button>
               </div>
             )}

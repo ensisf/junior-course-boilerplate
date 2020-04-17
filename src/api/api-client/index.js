@@ -9,7 +9,7 @@ class ApiClient {
     this.#config = config;
   }
 
-  _handleError(error, url, message = "Error during API call") {
+  #handleError = (error, url, message = "Error during API call") => {
     const err = new ApiError({
       extra: {
         reuestError: error,
@@ -19,10 +19,14 @@ class ApiClient {
     });
     apiErrorLogger(err);
     throw err;
-  }
+  };
+
+  #getUrl = (url) => {
+    return `${this.#config.BASE_URL}${url}`;
+  };
 
   async get({ url, options = {} }) {
-    const URL = `${this.#config.BASE_URL}/${url}`;
+    const URL = this.#getUrl(url);
     try {
       const response = await fetch(URL, {
         method: HTTP_METHODS.GET,
@@ -30,19 +34,20 @@ class ApiClient {
       });
       return response.json();
     } catch (err) {
-      this._handleError(err, URL, "Error during fething data");
+      this.#handleError(err, URL, "Error during fething data");
     }
   }
 
   async post({ url, options = {} }) {
+    const URL = this.#getUrl(url);
     try {
-      const response = await fetch(`${this.#config.BASE_URL}${url}`, {
+      const response = await fetch(URL, {
         method: HTTP_METHODS.POST,
         ...options,
       });
       return response.json();
     } catch (err) {
-      this._handleError(err, URL, "Error during posting data");
+      this.#handleError(err, URL, "Error during posting data");
     }
   }
 }

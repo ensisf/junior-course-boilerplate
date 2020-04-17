@@ -6,7 +6,7 @@ import { history } from "rdx";
 import styled from "./App.module.scss";
 
 import { Home } from "containers/home";
-import { Product } from "pages/product";
+import { Product } from "containers/product";
 import { Page404 } from "pages/page-404";
 
 const App = () => {
