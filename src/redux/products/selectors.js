@@ -12,14 +12,17 @@ export const areProductsLoading = (state) => state.products.isLoading;
 
 export const getProducts = (state) => state.products.products;
 
+export const getProductsIds = (state) => state.products.productsIds;
+
 export const getFilteredProducts = createSelector(
-  [getProducts, getFilters, getQuery, getProductsIdsInBasket],
-  (products, filterData, query, productsIdsInBasket) => {
+  [getProducts, getProductsIds, getFilters, getQuery, getProductsIdsInBasket],
+  (products, productsIds, filterData, query, productsIdsInBasket) => {
     const { from, to, sale } = filterData;
 
     const categories = query.category ? query.category.split(",") : [];
 
-    const filterProducts = ({ price, discount, category }) => {
+    const filterProducts = (productid) => {
+      const { price, discount, category } = products[productid];
       const satisfyCategory = categories.length
         ? categories.some((cat) => cat === category)
         : true;
@@ -29,10 +32,9 @@ export const getFilteredProducts = createSelector(
       );
     };
 
-    return compose(
-      map(formatProduct(productsIdsInBasket)),
-      filter(filterProducts)
-    )(products);
+    const getProduct = (id) => formatProduct(productsIdsInBasket)(products[id]);
+
+    return compose(map(getProduct), filter(filterProducts))(productsIds);
   }
 );
 

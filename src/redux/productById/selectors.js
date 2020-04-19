@@ -10,8 +10,7 @@ export const getId = (state) => state.productById.id;
 export const getProductById = createSelector(
   [getProducts, getId, getProductsIdsInBasket],
   (products, id, productsIdsInBasket) => {
-    const product = products.find((product) => product.id === id);
-
-    return product && formatProduct(productsIdsInBasket)(product);
+    const product = products[id];
+    return product && formatProduct(productsIdsInBasket)(products[id]);
   }
 );

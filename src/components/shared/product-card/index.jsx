@@ -15,6 +15,7 @@ const BaseProductCard = ({
   id,
   isInBasket,
   addToBasket,
+  isInStock,
   removeFromBasket,
   ...restProps
 }) => {
@@ -24,13 +25,19 @@ const BaseProductCard = ({
   return (
     <div className={`${styles.productCard} ${className}`}>
       <Link to={`/products/${id}`} className={styles.productCard__link}>
-        <ProductItem ratingComponent={Rating} {...restProps} id={id} />
+        <ProductItem
+          ratingComponent={Rating}
+          {...restProps}
+          isInStock={isInStock}
+          id={id}
+        />
       </Link>
       <Button
         className={styles.productCard__basketBtn}
         isFull
         variant={BUTTON_VARIANTS.light}
         onClick={() => onToggleBasket(id, isInBasket)}
+        disabled={!isInStock}
       >
         {isInBasket ? "Удалить" : "Добавить"}
       </Button>
