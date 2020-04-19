@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import ProductCard from "csssr-school-product-card";
 import { useParams } from "react-router-dom";
 
 import styled from "./index.module.scss";
 import Placeholder from "assets/img/placeholder.svg";
 
+import { ProductCardContainer } from "containers/product-card";
+
 import { PageLayout } from "components/shared/page-layout";
-import { Rating } from "components/shared/rating";
 import { NotFound } from "pages/not-found";
 
 const Product = ({
@@ -36,7 +36,7 @@ const Product = ({
   ) : (
     <PageLayout title={product.title}>
       <div className={styled.card}>
-        <ProductCard ratingComponent={Rating} {...product} />
+        <ProductCardContainer className={styled.card__product} {...product} />
       </div>
     </PageLayout>
   );

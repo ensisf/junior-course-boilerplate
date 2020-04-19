@@ -1,24 +1,19 @@
 import React, { useEffect } from "react";
-import ProductCard from "csssr-school-product-card";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import { useQuery, useRoute } from "hooks";
-import { BUTTON_VARIANTS } from "constants";
 
 import { Heading } from "components/shared/heading";
 import { Grid } from "components/shared/grid";
 import { Pagination } from "components/shared/pagination";
 import { Filter } from "components/filter";
-import { Rating } from "components/shared/rating";
-import { Button } from "components/shared/button";
+
+import { ProductCardContainer } from "containers/product-card";
 import { BasketContainer } from "containers/basket";
-import { withLogger } from "hoc";
 
 import EmptyListPlaceholder from "assets/img/ill-planet.svg";
 import Placeholder from "assets/img/placeholder.svg";
 import styled from "./index.module.scss";
-
-const ProductCardWithLogger = withLogger(ProductCard, "ProductCard");
 
 const loadingItems = Array.from({ length: 6 }).map((_, idx) => ({ idx }));
 
@@ -32,8 +27,6 @@ const Home = ({
   filterProps,
   fetchProducts,
   filterChange,
-  addToBasket,
-  removeFromBasket,
 }) => {
   const history = useHistory();
 
@@ -87,14 +80,6 @@ const Home = ({
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  const toggleProductInBasket = (id, isInBasket) => {
-    if (isInBasket) {
-      removeFromBasket(id);
-    } else {
-      addToBasket(id);
-    }
-  };
-
   const pageTitle =
     !isLoading && products.length === 0
       ? "Товары не найдены"
@@ -129,24 +114,7 @@ const Home = ({
             emptyListPlaceholder={
               <img src={EmptyListPlaceholder} alt="Nothing found" />
             }
-            render={({ id, isInBasket, ...restProps }) => (
-              <div>
-                <Link to={`/p/${id}`} className={styled.products__link}>
-                  <ProductCardWithLogger
-                    ratingComponent={Rating}
-                    {...restProps}
-                  />
-                </Link>
-                <br />
-                <Button
-                  isFull
-                  variant={BUTTON_VARIANTS.light}
-                  onClick={() => toggleProductInBasket(id, isInBasket)}
-                >
-                  {isInBasket ? "Удалить" : "Добавить"}
-                </Button>
-              </div>
-            )}
+            render={(props) => <ProductCardContainer {...props} />}
           />
           {products.length > 0 && (
             <Pagination currentPage={currentPage} totalPages={totalPages} />

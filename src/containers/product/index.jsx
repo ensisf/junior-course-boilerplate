@@ -4,15 +4,16 @@ import {
   setProductId,
   resetProductbyId,
   getProductById,
+  isProductLoading,
 } from "rdx/productById";
-import { fetchProducts } from "rdx/products";
+import { fetchProducts, areProductsLoading } from "rdx/products";
 
 import { Product } from "pages/product";
 
 const mapStateToProps = (state) => ({
   product: getProductById(state),
-  areProductsLoading: state.products.isLoading,
-  isProductLoading: state.productById.isLoading,
+  areProductsLoading: areProductsLoading(state),
+  isProductLoading: isProductLoading(state),
 });
 
 const mapActionsToProps = {

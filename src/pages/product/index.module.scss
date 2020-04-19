@@ -2,19 +2,29 @@
   display: flex;
   justify-content: center;
 
-  > div {
-    display: inline-flex;
+  &__product {
     width: 470px;
-    min-height: 200px;
-    vertical-align: top;
-    padding-left: 246px;
-  }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "img title"
+      "img name"
+      "img stars"
+      "img price"
+      "img btn";
 
-  img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
+    > a,
+    > a > div {
+      display: contents;
+    }
+
+    img {
+      grid-area: img;
+    }
+
+    button {
+      margin-top: 10px;
+    }
   }
 }
 

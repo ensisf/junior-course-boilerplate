@@ -2,18 +2,19 @@ import { formatProduct } from "helpers";
 import { createSelector } from "reselect";
 import { compose, slice, filter, map, pathOr } from "ramda";
 import { ITEMS_PER_PAGE } from "constants";
+import { getProductsIdsInBasket } from "rdx/basket";
 
 export const getFilters = (state) => state.filter;
 
-export const getProductsIdsInBasket = (state) => state.basket.productsIds;
-
 export const getQuery = (state) => state.router.location.query;
+
+export const areProductsLoading = (state) => state.products.isLoading;
 
 export const getProducts = (state) => state.products.products;
 
 export const getFilteredProducts = createSelector(
-  [getProducts, getFilters, getQuery],
-  (products, filterData, query) => {
+  [getProducts, getFilters, getQuery, getProductsIdsInBasket],
+  (products, filterData, query, productsIdsInBasket) => {
     const { from, to, sale } = filterData;
 
     const categories = query.category ? query.category.split(",") : [];
@@ -28,7 +29,10 @@ export const getFilteredProducts = createSelector(
       );
     };
 
-    return compose(map(formatProduct), filter(filterProducts))(products);
+    return compose(
+      map(formatProduct(productsIdsInBasket)),
+      filter(filterProducts)
+    )(products);
   }
 );
 
@@ -62,16 +66,11 @@ export const getPaginationData = createSelector(
 );
 
 export const getCurrentPageProducts = createSelector(
-  [getFilteredProducts, getPaginationData, getProductsIdsInBasket],
-  (products, pageData, productsIdsInBasket) => {
+  [getFilteredProducts, getPaginationData],
+  (products, pageData) => {
     const { itemsPerPage, page } = pageData;
-    const addBasketFlag = (product) => ({
-      isInBasket: productsIdsInBasket.some((id) => id === product.id),
-      ...product,
-    });
 
     return compose(
-      map(addBasketFlag),
       slice(page * itemsPerPage - itemsPerPage, itemsPerPage * page)
     )(products);
   }
