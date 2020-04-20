@@ -38,6 +38,6 @@ const mapActionsToProps = {
   resetFilter,
 };
 
-const withStore = connect(mapStateToProps, mapActionsToProps)(Home);
+const HomeContainer = connect(mapStateToProps, mapActionsToProps)(Home);
 
-export { withStore as Home };
+export { HomeContainer };

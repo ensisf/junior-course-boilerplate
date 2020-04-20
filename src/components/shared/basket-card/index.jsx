@@ -1,15 +1,19 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styled from "./index.module.scss";
+import cn from "classnames/bind";
+import { Link } from "react-router-dom";
+
 import { Button } from "components/shared/button";
 import { BUTTON_VARIANTS } from "constants";
-import cn from "classnames/bind";
+
+import styled from "./index.module.scss";
 
 const stylesCx = cn.bind(styled);
 
-const Basket = ({
+const BasketCard = ({
   className = "",
   count,
+  totalPrice,
   isSaving,
   isSaved,
   onSave,
@@ -36,17 +40,23 @@ const Basket = ({
         error.message || "Something wrong happened"
       ) : (
         <>
-          <div className={styled.basket__title}>
+          <Link
+            to="/basket"
+            className={stylesCx({
+              basket__title: true,
+              isSaved,
+            })}
+          >
             Корзина
-            <span
-              className={stylesCx({
-                basket__count: true,
-                isSaved,
-              })}
-            >
-              {count}
-            </span>
-          </div>
+          </Link>
+          <ul className={styled.basket__list}>
+            <li className={styled.basket__listItem}>
+              Товаров <span className={styled.basket__count}>{count}</span>
+            </li>
+            <li className={styled.basket__listItem}>
+              Всего <span className={styled.basket__price}>{totalPrice} ₽</span>
+            </li>
+          </ul>
           {count > 0 && (
             <Button
               disabled={isSaving}
@@ -65,13 +75,14 @@ const Basket = ({
   );
 };
 
-Basket.propTypes = {
+BasketCard.propTypes = {
   className: PropTypes.string,
   isSaving: PropTypes.bool.isRequired,
   count: PropTypes.number.isRequired,
+  totalPrice: PropTypes.number.isRequired,
   isSaved: PropTypes.bool.isRequired,
   onSave: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
 };
 
-export { Basket };
+export { BasketCard };

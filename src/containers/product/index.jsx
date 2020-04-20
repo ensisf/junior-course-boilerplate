@@ -22,6 +22,6 @@ const mapActionsToProps = {
   fetchProducts,
 };
 
-const withStore = connect(mapStateToProps, mapActionsToProps)(Product);
+const ProductContainer = connect(mapStateToProps, mapActionsToProps)(Product);
 
-export { withStore as Product };
+export { ProductContainer };

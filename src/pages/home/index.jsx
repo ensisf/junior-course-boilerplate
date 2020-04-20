@@ -9,7 +9,7 @@ import { Pagination } from "components/shared/pagination";
 import { Filter } from "components/filter";
 
 import { ProductCardContainer } from "containers/product-card";
-import { BasketContainer } from "containers/basket";
+import { BasketCardContainer } from "containers/basket-card";
 
 import EmptyListPlaceholder from "assets/img/ill-planet.svg";
 import Placeholder from "assets/img/placeholder.svg";
@@ -121,7 +121,7 @@ const Home = ({
           )}
         </div>
       )}
-      <BasketContainer />
+      <BasketCardContainer />
     </div>
   );
 };
