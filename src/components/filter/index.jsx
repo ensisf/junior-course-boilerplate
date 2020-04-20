@@ -29,20 +29,23 @@ const BaseFilter = ({
 }) => {
   const createRoute = useRoute();
 
-  const getRoute = (categoryName) =>
-    createRoute({ category: categoryName, page: 1 });
-
   const { category } = useQuery();
+
+  const selectedCategories = category ? category.split(",") : [];
 
   const getBtnVariant = (categoryName) => {
     const { primary, light } = BUTTON_VARIANTS;
 
-    if (!Array.isArray(category)) {
-      return categoryName === category ? primary : light;
-    }
-
-    return category.some((cat) => cat === categoryName) ? primary : light;
+    return selectedCategories.some((cat) => cat === categoryName)
+      ? primary
+      : light;
   };
+
+  const getRoute = (categoryName) =>
+    createRoute({
+      category: categoryName,
+      page: 1,
+    });
 
   return (
     <form

@@ -3,11 +3,11 @@ import { Switch, Route } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 import { history } from "rdx";
 
-import styled from "./index.module.scss";
+import styled from "./App.module.scss";
 
-import { Home } from "pages/home";
-import { Product } from "pages/product";
-import { NotFound } from "pages/not-found";
+import { Home } from "containers/home";
+import { Product } from "containers/product";
+import { Page404 } from "pages/page-404";
 
 const App = () => {
   return (
@@ -15,8 +15,8 @@ const App = () => {
       <ConnectedRouter history={history}>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/p/:productId" component={Product} />
-          <Route path="*" component={NotFound} />
+          <Route exact path="/products/:productId" component={Product} />
+          <Route path="*" component={Page404} />
         </Switch>
       </ConnectedRouter>
     </div>

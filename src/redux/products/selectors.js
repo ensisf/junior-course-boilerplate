@@ -2,21 +2,26 @@ import { formatProduct } from "helpers";
 import { createSelector } from "reselect";
 import { compose, slice, filter, map, pathOr } from "ramda";
 import { ITEMS_PER_PAGE } from "constants";
+import { getProductsIdsInBasket } from "rdx/basket";
 
 export const getFilters = (state) => state.filter;
 
 export const getQuery = (state) => state.router.location.query;
 
+export const areProductsLoading = (state) => state.products.isLoading;
+
 export const getProducts = (state) => state.products.products;
 
 export const getFilteredProducts = createSelector(
-  [getProducts, getFilters, getQuery],
-  (products, filterData, query) => {
+  [getProducts, getFilters, getQuery, getProductsIdsInBasket],
+  (products, filterData, query, productsIdsInBasket) => {
     const { from, to, sale } = filterData;
 
+    const categories = query.category ? query.category.split(",") : [];
+
     const filterProducts = ({ price, discount, category }) => {
-      const satisfyCategory = query.category
-        ? query.category.indexOf(category) !== -1
+      const satisfyCategory = categories.length
+        ? categories.some((cat) => cat === category)
         : true;
 
       return (
@@ -24,7 +29,10 @@ export const getFilteredProducts = createSelector(
       );
     };
 
-    return compose(map(formatProduct), filter(filterProducts))(products);
+    return compose(
+      map(formatProduct(productsIdsInBasket)),
+      filter(filterProducts)
+    )(products);
   }
 );
 
@@ -61,9 +69,9 @@ export const getCurrentPageProducts = createSelector(
   [getFilteredProducts, getPaginationData],
   (products, pageData) => {
     const { itemsPerPage, page } = pageData;
-    return slice(
-      page * itemsPerPage - itemsPerPage,
-      itemsPerPage * page
+
+    return compose(
+      slice(page * itemsPerPage - itemsPerPage, itemsPerPage * page)
     )(products);
   }
 );

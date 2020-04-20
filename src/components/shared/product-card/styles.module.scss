@@ -1,0 +1,13 @@
+.productCard {
+  position: relative;
+  &__link {
+    display: block;
+    text-decoration: none;
+    transition: 0.2s;
+    margin-bottom: 15px;
+
+    &:hover {
+      transform: scale(1.01);
+    }
+  }
+}

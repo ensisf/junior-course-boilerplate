@@ -1,29 +1,19 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import ProductCard from "csssr-school-product-card";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-import { filterChange, resetFilter, getFilterProps } from "rdx/filter";
 import { useQuery, useRoute } from "hooks";
-
-import {
-  fetchProducts,
-  getPaginationData,
-  getCurrentPageProducts,
-} from "rdx/products";
 
 import { Heading } from "components/shared/heading";
 import { Grid } from "components/shared/grid";
 import { Pagination } from "components/shared/pagination";
 import { Filter } from "components/filter";
-import { Rating } from "components/shared/rating";
-import { withLogger } from "hoc";
+
+import { ProductCardContainer } from "containers/product-card";
+import { BasketContainer } from "containers/basket";
 
 import EmptyListPlaceholder from "assets/img/ill-planet.svg";
 import Placeholder from "assets/img/placeholder.svg";
 import styled from "./index.module.scss";
-
-const ProductCardWithLogger = withLogger(ProductCard, "ProductCard");
 
 const loadingItems = Array.from({ length: 6 }).map((_, idx) => ({ idx }));
 
@@ -70,16 +60,15 @@ const Home = ({
     if (query.category === undefined) {
       payload.category = newCategory;
     } else {
-      const selected = Array.isArray(query.category)
-        ? query.category
-        : [query.category];
+      const selected = query.category.split(",");
 
       if (selected.some((cat) => cat === newCategory)) {
         payload.category = selected.filter((cat) => cat !== newCategory);
       } else {
-        payload.category.push(...selected, newCategory);
+        payload.category = [...new Set([...selected, newCategory])].join(",");
       }
     }
+
     history.push(createRoute(payload));
   };
 
@@ -91,14 +80,14 @@ const Home = ({
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  const title =
+  const pageTitle =
     !isLoading && products.length === 0
       ? "Товары не найдены"
       : "Список товаров";
 
   return (
     <div className={styled.products}>
-      <Heading className={styled.products__title}>{title}</Heading>
+      <Heading className={styled.products__title}>{pageTitle}</Heading>
       <Filter
         onChange={onFilterChange}
         onCategoryClick={onCategoryClick}
@@ -125,46 +114,16 @@ const Home = ({
             emptyListPlaceholder={
               <img src={EmptyListPlaceholder} alt="Nothing found" />
             }
-            render={(props) => (
-              <Link to={`/p/${props.id}`} className={styled.products__link}>
-                <ProductCardWithLogger ratingComponent={Rating} {...props} />
-              </Link>
-            )}
+            render={(props) => <ProductCardContainer {...props} />}
           />
           {products.length > 0 && (
             <Pagination currentPage={currentPage} totalPages={totalPages} />
           )}
         </div>
       )}
+      <BasketContainer />
     </div>
   );
 };
 
-const mapStateToProps = (state) => {
-  const {
-    filter,
-    products: { isLoading, error },
-  } = state;
-
-  const { page, totalPages } = getPaginationData(state);
-
-  return {
-    isLoading,
-    error,
-    totalPages,
-    currentPage: page,
-    filterProps: getFilterProps(state),
-    products: getCurrentPageProducts(state),
-    filter,
-  };
-};
-
-const mapActionsToProps = {
-  fetchProducts,
-  filterChange,
-  resetFilter,
-};
-
-const withStore = connect(mapStateToProps, mapActionsToProps)(Home);
-
-export { withStore as Home };
+export { Home };

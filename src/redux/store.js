@@ -6,6 +6,7 @@ import { connectRouter, routerMiddleware } from "connected-react-router";
 import products from "rdx/products";
 import filter from "rdx/filter";
 import productById from "rdx/productById";
+import basket from "rdx/basket";
 
 const history = createBrowserHistory();
 
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   products,
   filter,
   productById,
+  basket,
 });
 
 const composeEnhancers =

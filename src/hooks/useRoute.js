@@ -9,10 +9,16 @@ const useRoute = () => {
 
   return (params = {}) => ({
     ...location,
-    search: queryString.stringify({
-      ...query,
-      ...params,
-    }),
+    search: queryString.stringify(
+      {
+        ...query,
+        ...params,
+      },
+      {
+        arrayFormat: "comma",
+        encode: false,
+      }
+    ),
   });
 };
 export { useRoute };
