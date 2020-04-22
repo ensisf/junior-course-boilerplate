@@ -1,14 +1,22 @@
 import { BasketCard } from "components/shared/basket-card";
 import { connect } from "react-redux";
-import { saveBasket, clearBasket, getBasketData } from "rdx/basket";
+import {
+  saveBasket,
+  clearBasket,
+  getBasketData,
+  getProductsIdsInBasket,
+  isBasketSaving,
+  isBasketSaved,
+  getBasketError,
+} from "rdx/basket";
 
 const mapStateToProps = (state) => {
-  const { productsIds, isSaving, isSaved, error } = state.basket;
+  const productsIds = getProductsIdsInBasket(state);
   const { totalPrice } = getBasketData(state);
   return {
-    isSaving,
-    error,
-    isSaved,
+    isSaving: isBasketSaving(state),
+    error: getBasketError(state),
+    isSaved: isBasketSaved(state),
     totalPrice,
     count: productsIds.length,
   };
