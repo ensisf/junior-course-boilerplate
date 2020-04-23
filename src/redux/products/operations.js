@@ -10,6 +10,10 @@ import { getMaxMinPrice } from "helpers";
 import { apiClient } from "api";
 import { RESPONSE_RESULTS } from "constants";
 
+import { normalize, schema } from "normalizr";
+
+const productsSchema = [new schema.Entity("products")];
+
 export const fetchProducts = () => async (dispatch) => {
   try {
     dispatch(startLoading());
@@ -30,7 +34,8 @@ export const fetchProducts = () => async (dispatch) => {
         to: priceRange.max,
       })
     );
-    dispatch(addProducts(products));
+
+    dispatch(addProducts(normalize(products, productsSchema)));
     dispatch(endLoading());
   } catch (error) {
     dispatch(setError(error));

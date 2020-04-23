@@ -8,6 +8,7 @@ import {
 import { ITEMS_PER_PAGE } from "constants";
 
 const INITIAL_STATE = {
+  productsIds: [],
   products: [],
   itemsPerPage: ITEMS_PER_PAGE,
   priceRange: {
@@ -20,11 +21,16 @@ const INITIAL_STATE = {
 
 const productsReducer = (
   state = INITIAL_STATE,
-  { type, products, error, priceRange, page }
+  { type, products, error, priceRange }
 ) => {
   switch (type) {
     case UPDATE:
-      return { ...state, products };
+      const { entities, result } = products;
+      return {
+        ...state,
+        products: entities.products,
+        productsIds: result,
+      };
 
     case SET_PRICE_RANGE:
       return { ...state, priceRange };

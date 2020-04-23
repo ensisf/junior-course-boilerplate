@@ -5,8 +5,9 @@ import { history } from "rdx";
 
 import styled from "./App.module.scss";
 
-import { Home } from "containers/home";
-import { Product } from "containers/product";
+import { HomeContainer } from "containers/home";
+import { ProductContainer } from "containers/product";
+import { BasketContainer } from "containers/basket";
 import { Page404 } from "pages/page-404";
 
 const App = () => {
@@ -14,8 +15,13 @@ const App = () => {
     <div className={`container ${styled.app}`}>
       <ConnectedRouter history={history}>
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/products/:productId" component={Product} />
+          <Route exact path="/" component={HomeContainer} />
+          <Route
+            exact
+            path="/products/:productId"
+            component={ProductContainer}
+          />
+          <Route exact path="/basket" component={BasketContainer} />
           <Route path="*" component={Page404} />
         </Switch>
       </ConnectedRouter>

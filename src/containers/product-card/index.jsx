@@ -9,6 +9,6 @@ const mapActionsToProps = {
   removeFromBasket,
 };
 
-const withStore = connect(null, mapActionsToProps)(ProductCard);
+const ProductCardContainer = connect(null, mapActionsToProps)(ProductCard);
 
-export { withStore as ProductCardContainer };
+export { ProductCardContainer };

@@ -1,0 +1,9 @@
+.basket {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-column-gap: 46px;
+
+  &::before {
+    content: "";
+  }
+}

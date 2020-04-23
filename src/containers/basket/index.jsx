@@ -1,20 +1,15 @@
-import { Basket } from "components/shared/basket";
 import { connect } from "react-redux";
-import { saveBasket, clearBasket } from "rdx/basket";
+import { getBasketData } from "rdx/basket";
+
+import { Basket } from "pages/basket";
 
 const mapStateToProps = (state) => {
-  const { productsIds, isSaving, isSaved, error } = state.basket;
-
+  const { products } = getBasketData(state);
   return {
-    isSaving,
-    error,
-    isSaved,
-    count: productsIds.length,
+    products,
   };
 };
 
-const mapActionsToProps = { onSave: saveBasket, onClear: clearBasket };
-
-const BasketContainer = connect(mapStateToProps, mapActionsToProps)(Basket);
+const BasketContainer = connect(mapStateToProps)(Basket);
 
 export { BasketContainer };
